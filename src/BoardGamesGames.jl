@@ -5,8 +5,12 @@ using BoardGames
 export
     # Types
     TicTacToe,
-    TicTacToeBoard
-    
+    TicTacToeBoard,
+
+    getmoves,
+    play,
+    playerturn
+
 # Write your package code here.
 
 include("TicTacToe.jl")
