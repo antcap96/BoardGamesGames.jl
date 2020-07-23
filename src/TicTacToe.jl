@@ -99,6 +99,7 @@ function Base.show(io::IO, m::MIME{Symbol("image/png")}, b::TicTacToeBoard)
         end
     end
     show(io, m, c)
+    nothing
 end
 
 function baseboard(w::Real=300., h::Real=300.)
