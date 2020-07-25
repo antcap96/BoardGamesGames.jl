@@ -18,11 +18,16 @@ function TicTacToeBoard()
 end
 
 function BoardGames.getmoves(board::TicTacToeBoard)
-    if board.winner == 0
-        (1:9)[board.v .== 0]
-    else
-        return Int[]
+    ans = Int[]
+    if board.winner != 0
+        return ans
     end
+    for i in 1:length(board.v) #1:9
+        if board.v[i] == 0
+            push!(ans, i)
+        end
+    end
+    return ans
 end
 
 function Base.copy(board::TicTacToeBoard)
@@ -63,13 +68,21 @@ end
 
 function BoardGames.winner(board::TicTacToeBoard)
     if isempty(getmoves(board))
-        return board.winner == -1 ? 2 : 1
+        if board.winner == 0
+            return 0
+        else
+            return board.winner == -1 ? 2 : 1
+        end
     else
         error("call winner on ongoing game")
     end
 end
 
 function Base.show(io::IO, b::TicTacToeBoard)
+    print(io, "TicTacToeBoard($(b.v), $(b.turn), $(b.winner))")
+end
+
+function Base.show(io::IO, ::MIME"text/pain", b::TicTacToeBoard)
     icon = Dict(-1=>"o", 0=>" ", 1=>"x")
 
     s = "\n"
