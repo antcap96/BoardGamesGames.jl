@@ -1,8 +1,9 @@
 using BoardGames
 using Cairo
+using StaticArrays
 
 struct TicTacToeBoard
-    v::Vector{Int}
+    v::SVector{9,Int}
     turn::Int
     winner::Int
 end
@@ -10,7 +11,7 @@ end
 struct TicTacToe <: Game{TicTacToeBoard, Int} end
 
 function TicTacToeBoard()
-    v = zeros(Int, (9))
+    v = @SVector zeros(Int, (9))
     turn = 1
     winner = 0
 
@@ -44,8 +45,7 @@ function BoardGames.play(board::TicTacToeBoard, move::Int)
         error("attempt to play impossible move $move on board $board")
     end
 
-    v = copy(board.v)
-    v[move] = board.turn
+    v = @SVector [i == move ? board.turn : board.v[i] for i = 1:9]
     turn = -board.turn
 
     winner = 0
