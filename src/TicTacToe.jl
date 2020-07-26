@@ -35,9 +35,9 @@ function Base.copy(board::TicTacToeBoard)
     TicTacToeBoard(copy(board.v), board.turn, board.winner)
 end
 
-const lines = [[1,2,3], [4,5,6], [7,8,9], #rows
-               [1,4,7], [2,5,8], [3,6,9], #columns
-               [1,5,9], [3,5,7]]          #diagonals
+const lines = [SA[1,2,3], SA[4,5,6], SA[7,8,9], #rows
+               SA[1,4,7], SA[2,5,8], SA[3,6,9], #columns
+               SA[1,5,9], SA[3,5,7]]            #diagonals
 
 function BoardGames.play(board::TicTacToeBoard, move::Int)
     if board.winner != 0 || move > 9 || move < 1 ||
