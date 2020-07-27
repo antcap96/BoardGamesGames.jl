@@ -82,7 +82,7 @@ function Base.show(io::IO, b::TicTacToeBoard)
     print(io, "TicTacToeBoard($(b.v), $(b.turn), $(b.winner))")
 end
 
-function Base.show(io::IO, ::MIME"text/pain", b::TicTacToeBoard)
+function Base.show(io::IO, ::MIME"text/plain", b::TicTacToeBoard)
     icon = Dict(-1=>"o", 0=>" ", 1=>"x")
 
     s = "\n"

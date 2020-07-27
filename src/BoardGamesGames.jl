@@ -2,7 +2,26 @@ module BoardGamesGames
 
 using BoardGames
 
-export
+module TicTacToeGame
+    include("TicTacToe.jl")
+
+    export
+        #types
+        TicTacToe,
+        TicTacToeBoard
+end
+
+module OthelloGame
+    include("Othello.jl")
+
+    export
+        #types
+        Othello,
+        OthelloBoard
+end
+
+
+#=export
     # Types
     TicTacToe,
     TicTacToeBoard,
@@ -10,9 +29,9 @@ export
     getmoves,
     play,
     playerturn
-
+=#
 # Write your package code here.
 
-include("TicTacToe.jl")
+#include("TicTacToe.jl")
 
 end
