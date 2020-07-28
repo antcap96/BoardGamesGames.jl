@@ -119,11 +119,11 @@ function baseboard(w::Real=300., h::Real=300.)
     c = CairoRGBSurface(w,h)
     cr = CairoContext(c)
 
-    save(cr) #TODO: what does this do?
+    save(cr)
     set_source_rgb(cr,1.0,1.0,1.0)
     rectangle(cr,0.0,0.0,w,h)
     fill(cr)
-    restore(cr) #TODO: what does this do?
+    restore(cr)
 
     save(cr)
 
