@@ -112,3 +112,50 @@ function Base.show(io::IO, ::MIME"text/plain", b::OthelloBoard)
     end
     print(io,s)
 end
+
+function Base.show(io::IO, m::MIME{Symbol("image/png")}, b::OthelloBoard)
+    c, cr = baseboard(800., 800.)
+    for i in 1:8, j in 1:8
+        if b.v[i,j] != 0
+            draw_circle(c, cr, (i,j), b.v[i,j])
+        end
+    end
+    show(io, m, c)
+    nothing
+end
+
+function baseboard(w::Real=800., h::Real=800.)
+    c = CairoRGBSurface(w,h)
+    cr = CairoContext(c)
+
+    save(cr) #TODO: what does this do?
+    set_source_rgb(cr, 0., 153/255, 51/255)
+    rectangle(cr,0.0,0.0,w,h)
+    fill(cr)
+    restore(cr) #TODO: what does this do?
+
+    ## original example, following here
+
+    for x in 1:7
+        set_source_rgba(cr, 0, 0, 0, 1)
+        set_line_width(cr, 3.0)
+        move_to(cr, 0., x/8*w); line_to(cr, w, x/8*w);
+        move_to(cr, x/8*w, 0.); line_to(cr, x/8*w, h);
+        stroke(cr);
+    end
+    (c, cr)
+end
+
+function draw_circle(c, cr, i::Tuple{Int,Int}, player::Int, w::Real=800., h::Real=800.)
+    if player == 1
+        set_source_rgb(cr,0.0,0.0,0.0)
+    else
+        set_source_rgb(cr,1.0,1.0,1.0)
+    end
+
+    x = w/16 + (i[1]-1)*w/8
+    y = h/16 + (i[2]-1)*h/8
+    circle(cr, x, y, min(w,h)/24)
+    fill_preserve(cr)
+    stroke(cr)
+end
