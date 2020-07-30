@@ -43,5 +43,7 @@ othello_test_board = OthelloBoard(othello_test_board, -1)
     @test 0 <= winner(randomgame(OthelloBoard())) <= 2
     @test getmoves(othello_test_board) == [(8,5)]
     @test winner(play(othello_test_board, (8,5))) == 2
+    @test show(stdout, MIME"image/png"(), othello_test_board) === nothing
+    @test show(othello_test_board) === nothing
 
 end
