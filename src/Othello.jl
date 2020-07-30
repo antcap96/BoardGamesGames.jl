@@ -37,20 +37,40 @@ function BoardGames.getmoves(board::OthelloBoard)
     return ans
 end
 
-function BoardGames.play(board::OthelloBoard, move::Tuple{Int,Int})
-    if !play in getmoves(board)
-        error("illegal play $play")
+function hasmoves(board::OthelloBoard)
+    for i in 1:8, j in 1:8
+        if board.v[i,j] != 0
+            continue
+        end
+        for direction in ((i,j) for i in -1:1 for j in -1:1
+                                    if i != 0 || j != 0)
+            pos = (i,j) .+ direction
+            if checkmove(board.v, pos, direction, board.turn, false)
+                return true
+            end
+        end
     end
+    return false
+end
+
+function BoardGames.play(board::OthelloBoard, move::Tuple{Int,Int})
+    validmove = false
     v = copy(board.v)
 
     v[move...] = board.turn
 
     for direction in ((i,j) for i in -1:1 for j in -1:1
                                 if i != 0 || j != 0)
-        checkmove(v, move .+ direction, direction, board.turn, true)
+        if checkmove(v, move .+ direction, direction, board.turn, true)
+            validmove = true
+        end
     end
 
-    if isempty(getmoves(OthelloBoard(v, -board.turn)))
+    if !validmove
+        error("illegal play $play")
+    end
+
+    if !hasmoves(OthelloBoard(v, -board.turn))
         return OthelloBoard(v, board.turn)
     else
         return OthelloBoard(v, -board.turn)
@@ -84,7 +104,7 @@ function BoardGames.playerturn(board::OthelloBoard)
 end
 
 function BoardGames.winner(board::OthelloBoard)
-    if !isempty(getmoves(board))
+    if hasmoves(board)
         error("call winner on ongoing game")
     end
     p1 = sum(board.v .== 1)
