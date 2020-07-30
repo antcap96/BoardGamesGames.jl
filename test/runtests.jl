@@ -33,13 +33,13 @@ othello_test_board = OthelloBoard(othello_test_board, -1)
     @test playerturn(play(TicTacToeBoard(), 5)) == 2
     @test b.winner == 1
     @test winner(b) == 1
-    @test show(stdout, MIME"image/png"(), b) == nothing
-    @test show(b) == nothing
+    @test show(stdout, MIME"image/png"(), b) === nothing
+    @test show(b) === nothing
     @test 0 <= winner(randomgame(TicTacToeBoard())) <= 2
 
     @test playerturn(OthelloBoard()) == 1
-    @test playerturn(play(OthelloBoard(), (3,3))) == 2
-    @test show(OthelloBoard()) == nothing
+    @test playerturn(play(OthelloBoard(), (3,4))) == 2
+    @test show(OthelloBoard()) === nothing
     @test 0 <= winner(randomgame(OthelloBoard())) <= 2
     @test getmoves(othello_test_board) == [(8,5)]
     @test winner(play(othello_test_board, (8,5))) == 2
