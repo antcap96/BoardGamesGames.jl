@@ -1,7 +1,7 @@
 using BoardGames
 using Cairo
 
-struct OthelloBoard
+mutable struct  OthelloBoard
     v::Matrix{Int}
     turn::Int
 end
@@ -56,6 +56,9 @@ end
 function BoardGames.play(board::OthelloBoard, move::Tuple{Int,Int})
     validmove = false
     v = copy(board.v)
+    if board.v[move...] != 0
+        error("illegal play $play")
+    end
 
     v[move...] = board.turn
 
@@ -76,6 +79,37 @@ function BoardGames.play(board::OthelloBoard, move::Tuple{Int,Int})
         return OthelloBoard(v, -board.turn)
     end
 end
+
+function BoardGames.play!(board::OthelloBoard, move::Tuple{Int,Int})
+    validmove = false
+
+    if board.v[move...] != 0
+        error("illegal play $play")
+    end
+
+
+    board.v[move...] = board.turn
+
+    for direction in ((i,j) for i in -1:1 for j in -1:1
+                                if i != 0 || j != 0)
+        if checkmove(board.v, move .+ direction, direction, board.turn, true)
+            validmove = true
+        end
+    end
+
+    if !validmove
+        error("illegal play $play")
+    end
+    
+    board.turn = -board.turn
+    if hasmoves(board)
+        return board
+    else
+        board.turn = -board.turn
+        return board
+    end
+end
+
 
 function checkmove(b, x, direction, player, fill::Bool, count=1)
     if !(1 <= x[1] <= 8) || !(1 <= x[2] <= 8) || b[x...] == 0

@@ -25,6 +25,12 @@ othello_test_board[8,7] = -1
 
 othello_test_board = OthelloBoard(othello_test_board, -1)
 
+new_othello = OthelloBoard()
+
+function Base.:(==)(b1::OthelloBoard, b2::OthelloBoard)
+    return b1.v == b2.v && b1.turn == b2.turn
+end
+
 @testset "BoardGamesGames.jl" begin
     # Write your tests here.
     @test TicTacToeBoard().turn == 1
@@ -45,5 +51,6 @@ othello_test_board = OthelloBoard(othello_test_board, -1)
     @test winner(play(othello_test_board, (8,5))) == 2
     @test show(stdout, MIME"image/png"(), othello_test_board) === nothing
     @test show(othello_test_board) === nothing
+    @test play!(new_othello, (3,4)) == play(OthelloBoard(), (3,4))
 
 end
