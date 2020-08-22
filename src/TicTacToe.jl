@@ -1,6 +1,7 @@
 using BoardGames
 using Cairo
 using StaticArrays
+using BoardGamesGUI
 
 struct TicTacToeBoard
     v::SVector{9,Int}
@@ -103,52 +104,56 @@ function Base.show(io::IO, ::MIME"text/plain", b::TicTacToeBoard)
 end
 
 function Base.show(io::IO, m::MIME{Symbol("image/png")}, b::TicTacToeBoard)
-    c, cr = baseboard(300., 300.)
-    for i in 1:9
-        if b.v[i] == 1
-            draw_cross(c, cr, i)
-        elseif b.v[i] == -1
-            draw_circle(c, cr, i)
-        end
-    end
+    w,h = 300,300
+    c = CairoRGBSurface(w, h)
+    ctx = CairoContext(c)
+    draw(ctx, b, w, h)
     show(io, m, c)
     nothing
 end
 
-function baseboard(w::Real=300., h::Real=300.)
-    c = CairoRGBSurface(w,h)
-    cr = CairoContext(c)
+function BoardGamesGUI.draw(ctx::CairoContext, b::TicTacToeBoard, w::Real, h::Real)
+    baseboard(ctx, w, h)
+    
+    for i in 1:9
+        if b.v[i] == 1
+            draw_cross(ctx, i, w, h)
+        elseif b.v[i] == -1
+            draw_circle(ctx, i, w, h)
+        end
+    end
+end
 
-    save(cr)
-    set_source_rgb(cr,1.0,1.0,1.0)
-    rectangle(cr,0.0,0.0,w,h)
-    fill(cr)
-    restore(cr)
+function baseboard(ctx::CairoContext, w::Real=300., h::Real=300.)
+    save(ctx)
+    set_source_rgb(ctx,1.0,1.0,1.0)
+    rectangle(ctx,0.0,0.0,w,h)
+    fill(ctx)
+    restore(ctx)
 
-    save(cr)
+    save(ctx)
 
     ## original example, following here
 
-    x0=0   ; y0=0  ;
-    x1=w/3 ; y1=h/3;
+    x0= 0  ; y0= 0  ;
+    x1= w/3; y1= h/3;
     x2=2w/3; y2=2h/3;
-    x3=w   ; y3=h;
+    x3= w  ; y3= h  ;
 
-    set_line_width(cr, 10.0)
-    stroke(cr)
+    set_line_width(ctx, 10.0)
+    stroke(ctx)
 
-    set_source_rgba(cr, 0, 0, 0, 1)
-    set_line_width(cr, 6.0)
-    move_to(cr,x0,y1); line_to(cr,x3,y1);
-    move_to(cr,x0,y2); line_to(cr,x3,y2);
-    move_to(cr,x1,y0); line_to(cr,x1,y3);
-    move_to(cr,x2,y0); line_to(cr,x2,y3);
-    stroke(cr);
-
-    (c, cr)
+    set_source_rgba(ctx, 0, 0, 0, 1)
+    set_line_width(ctx, 6.0)
+    move_to(ctx,x0,y1); line_to(ctx,x3,y1);
+    move_to(ctx,x0,y2); line_to(ctx,x3,y2);
+    move_to(ctx,x1,y0); line_to(ctx,x1,y3);
+    move_to(ctx,x2,y0); line_to(ctx,x2,y3);
+    stroke(ctx);
+    nothing
 end
 
-function draw_cross(c, cr, i::Integer, w::Real=300., h::Real=300.)
+function draw_cross(cr, i::Integer, w::Real=300., h::Real=300.)
     set_line_width(cr, min(w,h)/20)
     set_source_rgb(cr,1.0,0.0,0.0)
     x = (i-1) % 3
@@ -161,7 +166,7 @@ function draw_cross(c, cr, i::Integer, w::Real=300., h::Real=300.)
     stroke(cr);
 end
 
-function draw_circle(c, cr, i::Integer, w::Real=300., h::Real=300.)
+function draw_circle(cr, i::Integer, w::Real=300., h::Real=300.)
     set_line_width(cr, min(w,h)/20)
     set_source_rgb(cr,0.2,0.2,1.0)
     x = (i-1) % 3
