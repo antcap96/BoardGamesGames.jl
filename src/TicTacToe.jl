@@ -1,5 +1,6 @@
 using BoardGames
 using Cairo
+using Graphics
 using StaticArrays
 using BoardGamesGUI
 
@@ -112,7 +113,7 @@ function Base.show(io::IO, m::MIME{Symbol("image/png")}, b::TicTacToeBoard)
     nothing
 end
 
-function BoardGamesGUI.draw(ctx::CairoContext, b::TicTacToeBoard, w::Real, h::Real)
+function BoardGamesGUI.draw(ctx::GraphicsContext, b::TicTacToeBoard, w::Real, h::Real)
     baseboard(ctx, w, h)
     
     for i in 1:9
@@ -124,7 +125,11 @@ function BoardGamesGUI.draw(ctx::CairoContext, b::TicTacToeBoard, w::Real, h::Re
     end
 end
 
-function baseboard(ctx::CairoContext, w::Real=300., h::Real=300.)
+function BoardGamesGUI.correspondingmove(::TicTacToeBoard, x::Real, y::Real)
+    return convert(Int, floor(x*3) + 3floor(y*3)) + 1
+end
+
+function baseboard(ctx::GraphicsContext, w::Real=300., h::Real=300.)
     save(ctx)
     set_source_rgb(ctx,1.0,1.0,1.0)
     rectangle(ctx,0.0,0.0,w,h)
