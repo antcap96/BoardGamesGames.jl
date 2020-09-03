@@ -12,6 +12,8 @@ end
 
 struct TicTacToe <: Game{TicTacToeBoard, Int} end
 
+BoardGames.nplayers(::Type{TicTacToe}) = 2
+
 function TicTacToeBoard()
     v = @SVector zeros(Int, (9))
     turn = 1
